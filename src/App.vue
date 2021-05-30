@@ -1,12 +1,50 @@
 <template>
   <div id="app">
-    <div id="nav">
+    <the-nav />
+    <!-- <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    </div> -->
+    <router-view />
   </div>
 </template>
+
+<script>
+import TheNav from '@/views/layouts/TheNav.vue';
+// import { mapState } from 'vuex';
+
+export default {
+  name: 'App',
+  metaInfo: {
+    title: 'Github',
+  },
+
+  components: {
+    TheNav,
+  },
+
+  mounted() {
+    // // show key pressed by user
+    // window.addEventListener('keypress', e => {
+    //     console.log(String.fromCharCode(e.keyCode))
+    // })
+
+    if (localStorage.username) {
+      this.$store.commit('SET_USERNAME', localStorage.username);
+    }
+  },
+
+  watch: {
+    username(newName) {
+      localStorage.username = newName;
+    },
+
+    page(newPage) {
+      localStorage.page = newPage;
+    },
+  },
+};
+</script>
 
 <style>
 #app {
