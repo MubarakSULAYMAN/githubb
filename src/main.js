@@ -17,7 +17,8 @@ Vue.use(VueApollo);
 
 const getHeaders = () => {
   const headers = {};
-  const token = process.env.VUE_APP_API_KEY;
+  // const token = process.env.VUE_APP_API_KEY;
+  const token = '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';
 
   if (token) {
     headers.authorization = `Bearer ${token}`;
