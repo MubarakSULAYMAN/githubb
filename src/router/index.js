@@ -45,6 +45,7 @@ const router = new VueRouter({
   routes,
 });
 
+// TODO: Catch all wrong matching routed
 // router.resolve({
 //   name: 'PageNotFound',
 //   // params: { pathMatch: ['(/)MubarakSULAYMAN?tab=repositories(/)', ''] },

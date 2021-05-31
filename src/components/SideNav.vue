@@ -2,8 +2,6 @@
   <div class="container sticky" :style="{ zIndex: showItem ? 10 : 0 }">
     <div class="user-details grid">
       <div class="profile-pic_wrapper">
-        <!-- v-scroll="onScroll" -->
-        <!-- @scroll="onScroll" -->
         <img
           :src="user.avatarUrl"
           :alt="user.name"
@@ -100,7 +98,7 @@
           <p class="twitter link" v-if="user.twitterUsername != null">
             <i
               aria-hidden="true"
-              class="showItem fa-twitter"
+              class="showItem fab fa-twitter"
               title="twitter"
             ></i>
             <a
@@ -120,7 +118,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import gql from 'graphql-tag';
 
 export default {
@@ -175,55 +173,31 @@ export default {
     onScroll(e) {
       if (typeof window === 'undefined') return;
       const top = window.pageYOffset || e.target.scrollTop || 0;
-      // const windowSize = window.innerHeight + Math.ceil(window.pageYOffset);
-      // let tolerance;
-
-      // 600px > < 960px
-      // if (['xs', 'sm'].includes(this.$vuetify.breakpoint.name)) {
-      //   tolerance = 120;
-      // } else tolerance = 100;
-
-      // const bottom = windowSize + tolerance >= document.body.offsetHeight;
-      // const top = windowSize + tolerance >= document.body.offsetHeight;
-
-      // this.showItem = top > 50 && !bottom;
-      // this.showItem = top > 50 || top;
       this.showItem = top < 325;
       this.$store.commit('SET_AVATAR_STATUS', !this.showItem);
-
-      // if (top > 325) {
-      //   this.$store.commit('SET_AVATAR_URL', x.avatarUrl);
-      // }
     },
 
     setAvatarUrl() {
       const x = this.user;
       if (x) {
         return this.$store.commit('SET_AVATAR_URL', x.avatarUrl);
-        // return this.$store.dispatch('updateAvatarUrl', x.avatarUrl);
       }
 
       return '';
     },
+
+    ...mapActions(['updateUserLoading']),
   },
 
   computed: {
     ...mapState(['username']),
   },
 
-  async created() {
+  created() {
+    this.updateUserLoading(this.$apollo.queries.user.loading);
+    this.$store.commit('SET_NAME', this.user.name);
     this.showItem = true;
     window.addEventListener('scroll', this.onScroll);
-
-    // const currentUser = this.$router.currentRoute.path.slice(1);
-    // if (currentUser !== this.username) {
-    //   this.$store.commit('SET_USERNAME', currentUser);
-    //   await this.$apollo.queries.user.refresh();
-    // }
-  },
-
-  destroyed() {
-    window.removeEventListener('scroll', this.onScroll);
   },
 
   async beforeUpdate() {
@@ -232,19 +206,14 @@ export default {
     const currentUser = this.$router.currentRoute.path.slice(1);
     if (currentUser !== this.username) {
       this.$store.commit('SET_USERNAME', currentUser);
+      this.updateUserLoading(this.$apollo.queries.user.loading);
       await this.$apollo.queries.user.refresh();
     }
   },
 
-  // async mounted() {
-  //   const currentUser = this.$router.currentRoute.path.slice(1);
-  //   if (currentUser !== this.username) {
-  //     this.$store.commit('SET_USERNAME', currentUser);
-  //     await this.$apollo.queries.user.refresh();
-  //   }
-
-  //   // console.log(this.$apollo.queries);
-  // },
+  destroyed() {
+    window.removeEventListener('scroll', this.onScroll);
+  },
 };
 </script>
 
@@ -260,15 +229,11 @@ p,
   color: var(--github-black);
   line-height: 1.5rem;
 }
-/* .container {
-  z-index: 10;
-} */
 
 .profile-pic_wrapper {
   width: var(--custom-size);
   height: var(--custom-size);
   margin-bottom: 1rem;
-  /* z-index: 9999 !important; */
 }
 
 img.profile-pic {

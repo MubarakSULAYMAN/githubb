@@ -18,16 +18,8 @@ export default {
     ...mapState(['isStarting']),
   },
 
-  beforeCreate() {
-    // alert('Hello, change user');
-    // this.$store.commit('SET_STARTING', true);
-    // alert(this.isStarting);
-  },
-
   created() {
     this.$store.commit('SET_STARTING', true);
-    // alert(this.isStarting);
-    // this.$router.push('/MubarakSULAYMAN?tab=repositories');
   },
 };
 </script>

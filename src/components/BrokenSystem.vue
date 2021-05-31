@@ -13,9 +13,9 @@ import TheShortcuts from '../views/layouts/TheShortcuts.vue';
 export default {
   components: { TheShortcuts },
 
-  created() {
-    return console.log('Broken system is created');
-  },
+  // created() {
+  //   return console.log('Broken system is created');
+  // },
 };
 </script>
 

@@ -15,6 +15,8 @@
         Languages
       </select>
       <button class="new-repo">New</button> -->
+
+      <!-- <span>{{ $apollo.queries.userRepos.loading }}</span> -->
     </div>
     <div class="repo-card" v-for="repo in repos" :key="repo.id">
       <!-- {{ repoTotalCount }} -->
@@ -209,7 +211,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['username', 'repoTotalCount']),
+    ...mapState(['name', 'username', 'repoTotalCount']),
 
     repos() {
       return this.userRepos.repositories
@@ -253,24 +255,21 @@ export default {
     },
 
     newMetaInfo() {
-      if (this.user_info.name != null) {
-        return `${this.user_info.login} (${this.user_info.name})`;
+      if (this.name != null) {
+        return `${this.username} (${this.name})`;
       }
 
-      return this.user_info.login;
+      return this.username;
     },
+
+    ...mapActions(['updateReposLoading']),
   },
 
-  async created() {
+  created() {
     dayjs.extend(relativeTime);
     dayjs.extend(localizedFormat);
     this.setTotalRepos();
-
-    // const currentUser = this.$router.currentRoute.path.slice(1);
-    // if (currentUser !== this.username) {
-    //   this.$store.commit('SET_USERNAME', currentUser);
-    //   await this.$apollo.queries.userRepos.refresh();
-    // }
+    this.updateReposLoading(this.$apollo.queries.userRepos.loading);
   },
 
   async beforeUpdate() {
@@ -279,17 +278,10 @@ export default {
     const currentUser = this.$router.currentRoute.path.slice(1);
     if (currentUser !== this.username) {
       this.$store.commit('SET_USERNAME', currentUser);
+      this.updateReposLoading(this.$apollo.queries.userRepos.loading);
       await this.$apollo.queries.userRepos.refresh();
     }
   },
-
-  // async mounted() {
-  //   const currentUser = this.$router.currentRoute.path.slice(1);
-  //   if (currentUser !== this.username) {
-  //     this.$store.commit('SET_USERNAME', currentUser);
-  //     await this.$apollo.queries.userRepos.refresh();
-  //   }
-  // },
 
   filters: {
     customDate(date) {
@@ -336,7 +328,6 @@ a {
 }
 
 input[type='text'].find-repo {
-  /* width: 60%; */
   width: 100%;
   padding: 0.5rem 1rem;
   border: 1px solid var(--github-dark);

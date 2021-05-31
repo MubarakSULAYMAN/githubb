@@ -16,7 +16,7 @@ export default {
   created() {
     return [
       this.$store.dispatch('showWarning'),
-      console.log('Error notification is created'),
+      // console.log('Error notification is created'),
     ];
   },
 

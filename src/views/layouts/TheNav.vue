@@ -1,24 +1,30 @@
 <template>
   <div class="nav-container">
     <div class="nav flex-row bg-black">
-      <!-- @click="mobile_nav = !mobile_nav" -->
-      <!-- menu icon -->
-      <i aria-hidden="true" class="far fa-bars" title="open close menu"></i>
+      <i
+        aria-hidden="true"
+        class="far fa-bars"
+        title="open close menu"
+        @click="mobileNav = !mobileNav"
+      ></i>
 
-      <!-- @click="home" -->
-      <!-- github logo -->
-      <i aria-hidden="true" class="fab fa-github" title="github" @click="home"></i>
+      <i
+        aria-hidden="true"
+        class="fab fa-github"
+        title="github"
+        @click="home"
+      ></i>
 
-      <span class="input-wrap w-fit bg-black">
+      <span class="input-wrap large-screen w-fit bg-black">
         <input
           type="text"
           name=""
           id=""
           placeholder="Search or jump to..."
           class="bg-black"
-          v-model="search_term"
-          @focus="hide_slash = true"
-          @blur="hide_slash = false"
+          v-model="searchTerm"
+          @focus="hideSlash = true"
+          @blur="hideSlash = false"
           ref="searchInput"
         />
         <!-- @keypress.s="setSearchFocus" -->
@@ -27,41 +33,47 @@
         <!-- @click="$ref.searchInput.focus" -->
         <span
           class="slash inline-block bg-black"
-          v-show="!search_term && hide_slash === false"
+          v-show="!searchTerm && hideSlash === false"
         >
           /
         </span>
       </span>
 
-<span v-if="avatarUrl && $route.path !== ''">
-      <router-link
-        to="/"
-        class="w-fit bg-black"
-        v-for="route in router_group"
-        :key="route.name"
+      <span class="large-screen" v-if="avatarUrl && $route.path !== ''">
+        <router-link
+          to="/"
+          class="w-fit bg-black"
+          v-for="route in routerGroup"
+          :key="route.name"
           @click.native="changeRoute"
-      >
-        <!-- :disabled="!whateverActivatesThisLink"
-                :event="whateverActivatesThisLink ? 'click' : ''" -->
-        {{ route.name }}
-      </router-link>
+        >
+          {{ route.name }}
+        </router-link>
       </span>
 
-      <!-- v-if="user_exist" -->
+      <span v-else></span>
+
       <div class="nav_extras flex-row ml-auto" v-if="avatarUrl">
-        <!-- bell icon -->
         <i aria-hidden="true" class="far fa-bell" title="notification"></i>
 
-        <!-- plus icon -->
         <i aria-hidden="true" class="far fa-plus" title="add new"></i>
-        <i aria-hidden="true" class="fas fa-caret-down" title="notification"></i>
+        <i
+          aria-hidden="true"
+          class="fas fa-caret-down"
+          title="notification"
+        ></i>
+
         <span class="user-profile dropdown" tabindex="0">
           <img
             :src="avatarUrl"
             :alt="username"
             class="w-full h-full rounded-full"
           />
-        <i aria-hidden="true" class="fas fa-caret-down with-profile" title="notification"></i>
+          <i
+            aria-hidden="true"
+            class="fas fa-caret-down with-profile"
+            title="notification"
+          ></i>
           <div class="dropdown-content">
             <p>
               <router-link :to="`/${username}`">
@@ -82,7 +94,7 @@
 
             <router-link
               :to="option.route"
-              v-for="option in main_options"
+              v-for="option in mainOptions"
               :key="option.name"
             >
               <!-- @click.native="changeRoute(option.name)" -->
@@ -93,7 +105,7 @@
 
             <router-link
               :to="option.route"
-              v-for="option in other_options"
+              v-for="option in otherOptions"
               :key="option.name"
             >
               {{ option.name }}
@@ -104,51 +116,71 @@
       </div>
     </div>
 
-    <div class="drawer flex-col bg-black" v-if="mobile_nav === true">
-      <div class="input-wrap w-fit bg-black">
-        <!-- <input
-                    type="text"
-                    name=""
-                    id=""
-                    placeholder="Search or jump to..."
-                    class="bg-black"
-                    v-model="search_term"
-                    @focus="hide_slash = true"
-                    @blur="hide_slash = false"
-                    ref="search"
-                    v-on:keyup.page-up="setSearchFocus"
-                /> -->
-        <!-- @keypress.s="setSearchFocus" -->
-        <!-- .exact -->
-        <!-- focus on pressing of "s" -->
-        <!-- <span
-                    class="slash inline-block bg-black"
-                    v-show="!search_term && hide_slash === false"
-                >
-                    /
-                </span> -->
+    <div class="drawer flex-col bg-black" v-if="mobileNav === true">
+      <!-- <div class="input-wrap w-fit bg-black"> -->
+      <span class="input-wrap w-fit bg-black">
+        <input
+          type="text"
+          name=""
+          id=""
+          placeholder="Search or jump to..."
+          class="bg-black"
+          v-model="searchTerm"
+          @focus="hideSlash = true"
+          @blur="hideSlash = false"
+          ref="searchInput"
+        />
+        <span
+          class="slash inline-block bg-black"
+          v-show="!searchTerm && hideSlash === false"
+        >
+          /
+        </span>
+      </span>
+      <!-- </div> -->
+
+      <div class="drawer-options" v-if="avatarUrl && $route.path !== ''">
+        <router-link to="/in-view" class="w-fit bg-black">
+          Dashboard
+        </router-link>
+
+        <router-link
+          to="/in-view"
+          class="w-fit bg-black"
+          v-for="route in routerGroup"
+          :key="route.name"
+        >
+          {{ route.name }}
+        </router-link>
+
+        <router-link to="/in-view" class="w-fit bg-black">
+          Codespaces
+        </router-link>
+
+        <router-link to="/in-view" class="w-fit bg-black">
+          Sponsors
+        </router-link>
+
+        <router-link to="/in-view" class="w-fit bg-black">
+          Settings
+        </router-link>
+
+        <router-link :to="`/${username}`" class="w-fit bg-black user">
+          <img
+            :src="avatarUrl"
+            :alt="username"
+            class="w-full h-full rounded-full"
+          />
+          {{ username }}
+        </router-link>
+
+        <router-link to="/in-view" class="w-fit bg-black"
+          ><i aria-hidden="true" class="fas fa-sign-out" title="Sign out"></i>
+          Sign out
+        </router-link>
       </div>
 
-      <router-link to="/in-view" class="w-fit bg-black">
-        Dashboard
-      </router-link>
-
-      <router-link
-        to="/in-view"
-        class="w-fit bg-black"
-        v-for="route in router_group"
-        :key="route.name"
-      >
-        {{ route.name }}
-      </router-link>
-
-      <router-link to="/in-view" class="w-fit bg-black"> Settings </router-link>
-
-      <router-link :to="`/${username}`" class="w-fit bg-black">
-        {{ username }}
-      </router-link>
-
-      <router-link to="/in-view" class="w-fit bg-black"> Sign out </router-link>
+      <div class="notify" v-else>A sign is required to proceed.</div>
     </div>
   </div>
 </template>
@@ -160,11 +192,11 @@ import { mapState } from 'vuex';
 export default {
   data() {
     return {
-      mobile_nav: false,
-      search_term: '',
-      hide_slash: false,
+      mobileNav: false,
+      searchTerm: '',
+      hideSlash: false,
 
-      router_group: [
+      routerGroup: [
         {
           name: 'Pull requests',
           link: '',
@@ -183,7 +215,7 @@ export default {
         },
       ],
 
-      other_options: [
+      otherOptions: [
         {
           name: 'Upgrade',
           route: '/not-available',
@@ -222,37 +254,11 @@ export default {
         });
       }
       return {};
-      // this.goTo('/');
-      // this.$store.dispatch('fetchCustomRepos', [7, 1]);
     },
 
     changeRoute() {
       this.$router.push(`/${this.username}?tab=repositories`);
-      // return {};
     },
-
-    // changeRoute(route) {
-    //     console.log(route)
-    //     switch (route) {
-    //         case 'profile':
-    //             this.$store.dispatch('fetchPinnedRepos')
-    //             break
-    //         case 'repository':
-    //             this.$store.dispatch('fetchRepos', [30, 1])
-    //             break
-    //         // case 'project':
-    //         //     // code block
-    //         //     break
-    //         // case 'stars':
-    //         //     // code block
-    //         //     break
-    //         // case 'gists':
-    //         //     // code block
-    //         //     break
-    //         // default:
-    //         // // code block
-    //     }
-    // },
 
     derivedData() {
       return [
@@ -297,39 +303,15 @@ export default {
   },
 
   computed: {
-    main_options() {
+    mainOptions() {
       return this.derivedData();
     },
 
-    // ...mapState(['user_exist']),
-
-    // ...mapState({
-    //   username: (state) => state.user.username,
-    //   user_info: (state) => state.user.user_info,
-    // }),
-    // username() {
-    //   return 'username';
-    // },
-    // user_info() {
-    //   return 'user_info';
-    // },
     ...mapState(['username', 'avatarUrl']),
   },
 
   created() {
     window.addEventListener('keypress', this.focusNavInput);
-
-    return [
-      // this.$store.dispatch('fetchUsers'),
-      console.log(
-        this.username,
-        // this.user_info,
-        // this.user_info.name,
-        // this.user_info.avatar_url,
-        // this.user_exist,
-      ),
-      console.log('The nav is created.'),
-    ];
   },
 
   beforeDestroy() {
@@ -376,11 +358,11 @@ export default {
 .fa-plus,
 .fa-smile {
   margin-right: 5px;
-  }
+}
 
-  .with-profile{
-    margin-left: 5px;
-  }
+.with-profile {
+  margin-left: 5px;
+}
 
 i {
   display: inline-block;
@@ -389,11 +371,6 @@ i {
 .fa-bars {
   display: none;
 }
-
-/* .nav svg.octicon.octicon-plus, */
-/* .user-profile {
-  margin-left: 1rem;
-} */
 
 .input-wrap {
   position: relative;
@@ -461,10 +438,6 @@ input[type='text']:focus {
   text-decoration: none;
   background-color: var(--github-black);
 }
-
-/* .nav a.router-link-exact-active.router-link-active {
-    color: var(--github-dark);
-} */
 
 .nav a:hover {
   outline: none;
@@ -570,18 +543,9 @@ input[type='text']:focus {
   color: var(--github-gray-dark);
 }
 
-/* .set-status svg {
-  margin-right: 0.5rem;
-  fill: var(--github-gray-dark);
-} */
-
 .set-status:hover {
   color: var(--github-blue);
 }
-
-/* .set-status:hover svg {
-  fill: var(--github-blue);
-} */
 
 .drawer {
   display: none;
@@ -614,6 +578,10 @@ input[type='text']:focus {
     display: block;
   }
 
+  .large-screen {
+    display: none;
+  }
+
   .input-wrap,
   .nav a,
   .fa-plus,
@@ -628,7 +596,6 @@ input[type='text']:focus {
 
   .drawer {
     display: flex;
-    width: 100vw;
     height: fit-content;
     padding: 0 1.5rem 2rem;
   }
@@ -636,30 +603,19 @@ input[type='text']:focus {
   .drawer .input-wrap {
     position: relative;
     display: inline-block;
-    margin-bottom: 1rem;
+    width: calc(100vw - 4rem);
+    margin: 0 auto 1rem;
   }
 
-  .drawer .input[type='text'] {
+  .drawer input[type='text'] {
     width: 100%;
-    padding: 0.5rem 0.75rem;
+  }
+
+  .drawer input[type='text']:focus {
     color: var(--github-white);
-    border: 1px solid var(--github-darker);
+    background-color: var(--github-gray);
     border-radius: 0.4rem;
-    transition: all 0.2s ease-in;
-  }
-
-  .drawer .input[type='text']::placeholder,
-  .drawer .input[type='text']::-moz-placeholder,
-  .drawer .input[type='text']::-webkit-input-placeholder {
-    color: var(--github-dark);
-  }
-
-  .drawer .input[type='text']:focus {
-    width: 100% !important;
-    color: var(--github-black);
-    background-color: var(--github-white);
-    border-color: var(--github-blue);
-    outline: none;
+    border: 1px solid var(--github-blue);
   }
 
   .drawer .slash {
@@ -674,6 +630,12 @@ input[type='text']:focus {
     border: 1px solid var(--github-darker);
     border-radius: 0.25rem;
     box-sizing: border-box;
+  }
+
+  .drawer .drawer-options {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
   }
 
   .drawer a {
@@ -694,6 +656,20 @@ input[type='text']:focus {
 
   .drawer a:hover {
     outline: none;
+  }
+
+  .drawer .user {
+    display: flex;
+    align-items: center;
+  }
+
+  .drawer img {
+    width: 25px;
+    margin-right: 5px;
+  }
+
+  .notify {
+    color: var(--github-white);
   }
 }
 </style>

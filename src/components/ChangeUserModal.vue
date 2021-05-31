@@ -1,6 +1,5 @@
 <template>
   <div class="wrapper">
-    <!-- v-if="username" -->
     <form class="content flex-col" @submit.prevent="getUser">
       <p>Will you like to proceed as</p>
       <input
@@ -12,7 +11,7 @@
         @keydown.enter="getUser"
       />
       <button class="ml-auto" type="submit">YES</button>
-      <!-- <p v-if="processing === true">Proceeding as "{{ username }}"...</p> -->
+      <!-- <p v-if="processing === true">Continuing as "{{ username }}"...</p> -->
       <!-- <p v-if="[404].includes(request_status)">
         "{{ username }}" maybe INVALID!!!
       </p> -->
@@ -21,8 +20,6 @@
 </template>
 
 <script>
-// import { mapActions, mapState } from 'vuex';
-
 export default {
   data() {
     return {
@@ -33,28 +30,19 @@ export default {
   methods: {
     getUser() {
       if (this.username !== '') {
-        // await this.$apollo.queries.getUser.start();
-        // await this.$apollo.queries.getRepos.start();
         this.$router.push(`/${this.username}?tab=repositories`);
       }
     },
-
-    // ...mapActions(['updateUsername']),
   },
 
   computed: {
-    // ...mapState(['request_status']),
-    // ...mapState(['username']),
-
     username: {
       get() {
-        // return this.username;
         return this.$store.state.username;
       },
 
       set(value) {
         this.$store.commit('SET_USERNAME', value);
-        // this.updateUsername(value);
       },
     },
   },

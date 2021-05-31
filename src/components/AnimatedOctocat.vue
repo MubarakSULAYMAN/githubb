@@ -91,9 +91,9 @@
 
 <script>
 export default {
-  created() {
-    return console.log('Animated is created');
-  },
+  // created() {
+  //   return console.log('Animated is created');
+  // },
 };
 </script>
 

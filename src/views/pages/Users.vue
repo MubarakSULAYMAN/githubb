@@ -1,8 +1,10 @@
 <template>
   <div>
-    <animated-octocat v-if="isDataLoading" />
+    <!-- FIXME: Fix issues with loading state not updating appropriately -->
+    <!-- <animated-octocat v-if="isDataLoading === true" /> -->
 
-    <div class="users grid" v-if="!isDataLoading">
+    <!-- <div class="users grid" v-else> -->
+    <div class="users grid">
       <user-menu-nav class="top-nav sticky" @updateRoute="checkRoute" />
 
       <side-nav class="side-nav" />
@@ -12,9 +14,11 @@
       <users-footer class="footer flex-row" />
     </div>
 
-    <error-notification v-if="errorState === true">
+<!-- TODO: Add error and messages -->
+    <!-- <error-notification v-if="errorState === true"> -->
+    <!-- <error-notification>
       {{ errorMessage }}
-    </error-notification>
+    </error-notification> -->
     <!-- <div v-if="error">{{ error }}</div> -->
   </div>
 </template>
@@ -22,38 +26,32 @@
 <script>
 import { mapState } from 'vuex';
 
-import ErrorNotification from '@/components/ErrorNotification.vue';
+// import ErrorNotification from '@/components/ErrorNotification.vue';
 import Repositories from '@/components/Repositories.vue';
 import SideNav from '@/components/SideNav.vue';
 import UserMenuNav from '@/components/UserMenuNav.vue';
 import UsersFooter from '@/views/layouts/UsersFooter.vue';
-import AnimatedOctocat from '../../components/AnimatedOctocat.vue';
+// import AnimatedOctocat from '../../components/AnimatedOctocat.vue';
 
 export default {
   components: {
     UserMenuNav,
     SideNav,
     Repositories,
-    ErrorNotification,
+    // ErrorNotification,
     UsersFooter,
-    AnimatedOctocat,
-  },
-
-  data() {
-    return {
-      overview: false,
-      repositories: false,
-      in_view: false,
-    };
+    // AnimatedOctocat,
   },
 
   computed: {
     isDataLoading() {
       // return this.$apollo.queries.{name}.loading;
-      return this.$apollo.loading;
+      return this.userLoading && this.userReposLoading;
     },
 
     ...mapState([
+      'userLoading',
+      'userReposLoading',
       'username',
       'errorState',
       'errorMessage',
@@ -71,15 +69,6 @@ export default {
       }
     },
   },
-
-  // async created() {
-  //   const currentUser = this.$router.currentRoute.path.slice(1);
-  //   if (currentUser !== this.username) {
-  //     this.$store.commit('SET_USERNAME', currentUser);
-  //     await this.$apollo.queries.getUser.refresh();
-  //     await this.$apollo.queries.getRepos.refresh();
-  //   }
-  // },
 };
 </script>
 
@@ -113,6 +102,7 @@ export default {
 @media only screen and (max-width: 768px) {
   .users {
     grid-template-columns: 30% 70%;
+    padding-bottom: 2rem;
   }
 
   .side-nav {
@@ -128,6 +118,7 @@ export default {
 @media only screen and (max-width: 425px) {
   .users {
     grid-template-columns: 100%;
+    padding-bottom: 1rem;
   }
 
   .top-nav {

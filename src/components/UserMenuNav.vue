@@ -1,12 +1,10 @@
 <template>
   <div class="top-nav flex-row">
     <div class="user-info flex-row">
-      <!-- <div :class="['user-info_content', showAvatar ? '' : 'slide-down']" v-if="showAvatar"> -->
       <div :class="['user-info_content', showAvatar ? 'slide-down' : '']" v-if="showAvatar">
         <img :src="avatarUrl" :alt="username" />
       <strong><p>{{ username }}</p></strong>
       </div>
-      <!-- <p>{{ avatarUrl }}</p> -->
     </div>
 
     <div class="main-menu flex-row">
@@ -21,7 +19,6 @@
           {{ route.name }}
           <span class="repo-count" v-if="index === 1">
             {{ repoTotalCount }}
-            <!-- {{ $store.state.repoTotalCount }} -->
           </span>
         </router-link>
       </div>
@@ -83,21 +80,6 @@ export default {
     },
 
     ...mapState(['username', 'avatarUrl', 'repoTotalCount', 'showAvatar']),
-
-    // ...mapState({
-    //   username: (state) => state.user.username,
-    //   user_info: (state) => state.user.user_info,
-    // }),
-    // username() {
-    //   return 'username';
-    // },
-    // user_info() {
-    //   return 'user_info';
-    // },
-  },
-
-  created() {
-    return console.log('User menu nav is created');
   },
 };
 </script>
@@ -111,29 +93,22 @@ export default {
 }
 
 .user-info {
-  /* position: relative; */
   width: 25%;
   padding-left: 50px;
   padding-bottom: 0.5rem;
   align-items: flex-end;
-  /* border: 1px solid red; */
 }
 
 .user-info_content {
-  /* position: absolute; */
-  /* top: -200px; */
   display: flex;
   flex-direction: row;
   align-items: center;
-  /* justify-content: center; */
   transform: translateY(-200px);
   transition: all 0.5s ease-in-out;
 }
 
 .slide-down {
   transform: translateY(0);
-  /* position: absolute; */
-  /* top: 0; */
 }
 
 img {
@@ -168,8 +143,6 @@ img {
   border-color: var(--github-dark);
 }
 
-/* .top-nav a.router-link-exact-active.router-link-active:nth-child(2),
-.top-nav a.router-link-exact-active.router-link-active:focus { */
 .top-nav a.router-link-exact-active {
   /* .activeRoute { */
   border-color: var(--github-orange);

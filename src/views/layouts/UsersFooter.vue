@@ -31,28 +31,15 @@ export default {};
 <style>
 footer {
   width: calc(100vw - 40px);
-  /* font-size: var(--font-xs); */
   font-size: var(--font-sm);
-  /* padding: 0 20px; */
 }
 
 footer .left-foot,
 footer .right-foot {
   width: 70vw;
-  /* height: fit-content; */
-  /* max-height: fit-content; */
   margin: 0 40px;
   justify-content: space-between;
-  /* line-height: 1; */
-  border: 1px solid red;
 }
-
-/* footer span {
-  display: inline-block;
-  height: fit-content;
-  max-height: fit-content;
-  margin-top: auto 0;
-} */
 
 footer span:not(.left-foot span:first-child) {
   color: var(--github-blue);
@@ -75,21 +62,17 @@ span.logo .fa-github:hover {
 }
 @media only screen and (max-width: 768px) {
   footer {
-    margin: 0 4rem 0;
+    width: 100vw;
+    margin: 0;
     padding: 2rem 0 1rem;
     flex-wrap: wrap;
   }
 
   footer .left-foot,
   footer .right-foot {
-    /* display: flex; */
-    /* flex-wrap: wrap; */
     justify-content: center;
-    /* align-items: center; */
-    /* width: 100vw !important; */
     width: 100vw;
-    margin-top: 1rem;
-    border: 3px solid black;
+    margin: 1rem 20px 0;
   }
 
   footer .left-foot span:not(:first-child),
@@ -107,6 +90,12 @@ span.logo .fa-github:hover {
     grid-column: 1 / 2;
     grid-row: 4 / 5;
     margin: 0;
+  }
+
+  footer .left-foot,
+  footer .right-foot {
+    flex-wrap: wrap;
+    margin: 1rem 5px 0;
   }
 }
 </style>
