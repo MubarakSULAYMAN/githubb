@@ -4,7 +4,7 @@ A clone of github repository page.
 
 **`Githubb`** is built with vue, vuetify and lots love :heart: :sparkling_heart:, and deployed on netlify.
 
-Because of our believe in being progressive, we believe ths is just a work in progress :construction:. But, feel free to explore :ringed_planet: **[Githubb](https://githubb.netlify.app/)**, thank you friend.
+Because of our believe in being progressive, we believe ths is just a work in progress :construction:. But, feel free to explore :ringed_planet: **[Githubb](https://githoob.netlify.app/)**, thank you friend.
 
 ## Table of contents
 
