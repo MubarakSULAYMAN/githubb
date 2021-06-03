@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import userDetails from './modules/userDetails';
+import userRepositories from './modules/userRepositories';
 
 Vue.use(Vuex);
 
@@ -10,10 +12,14 @@ export default new Vuex.Store({
     username: 'MubarakSULAYMAN',
     avatarUrl: '',
     showAvatar: false,
+    user: [],
+    userRepos: [],
     repoTotalCount: 0,
     userLoading: true,
     userReposLoading: true,
-    errorState: true,
+    isError: false,
+    userError: null,
+    ReposError: null,
     errorMessage: 'An error just occured. It should resolve soon.',
   },
 
@@ -29,12 +35,28 @@ export default new Vuex.Store({
       state.username = newUsername;
     },
 
+    SET_USER_DETAILS(state, data) {
+      state.user = data;
+    },
+
     SET_USER_LOADING(state, newState) {
       state.userLoading = newState;
     },
 
+    SET_USER_ERROR(state, data) {
+      state.userError = data;
+    },
+
+    SET_REPOS(state, data) {
+      state.userRepos = data;
+    },
+
     SET_REPOS_LOADING(state, newState) {
       state.userReposLoading = newState;
+    },
+
+    SET_REPOS_ERROR(state, data) {
+      state.reposError = data;
     },
 
     SET_AVATAR_URL(state, newUrl) {
@@ -50,8 +72,8 @@ export default new Vuex.Store({
     },
 
     // TODO: Catch all error as required
-    SET_ERROR_STATE(state, newErrorState) {
-      state.errorState = newErrorState;
+    SET_ERROR_STATE(state, newState) {
+      state.isError = newState;
     },
 
     SET_ERROR_MESSAGE(state, newErrorMessage) {
@@ -68,31 +90,22 @@ export default new Vuex.Store({
       commit('SET_USERNAME', payload);
     },
 
-    updateUserLoading({ commit }, payload) {
-      commit('SET_USER_LOADING', payload);
-    },
-
-    updateReposLoading({ commit }, payload) {
-      commit('SET_REPOS_LOADING', payload);
-    },
-
-    // updateAvatarUrl({ commit }, payload) {
-    //   commit('SET_AVATAR_URL', payload);
-    // },
-
-    // updateShowAvatar({ commit }, payload) {
-    //   commit('SET_AVATAR_STATUS', payload);
-    // },
-
     showWarning({ commit }, payload) {
       commit('SET_ERROR_STATE', payload);
     },
 
     updateErrorMessage({ commit }, payload) {
+      commit('SET_ERROR_STATE', true);
       commit('SET_ERROR_STATE', payload);
+
+      setTimeout(() => {
+        commit('SET_ERROR_STATE', false);
+      }, 2500);
     },
   },
 
   modules: {
+    userDetails,
+    userRepositories,
   },
 });

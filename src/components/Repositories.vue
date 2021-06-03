@@ -8,18 +8,8 @@
         class="find-repo"
         placeholder="Find a repository..."
       />
-      <!-- <select name="" id="">
-        <option value="">Type Others</option>
-      </select>
-      <select name="" id="">
-        Languages
-      </select>
-      <button class="new-repo">New</button> -->
-
-      <!-- <span>{{ $apollo.queries.userRepos.loading }}</span> -->
     </div>
     <div class="repo-card" v-for="repo in repos" :key="repo.id">
-      <!-- {{ repoTotalCount }} -->
       <div class="repo-card_main grid">
         <div class="repo-card_details">
           <div class="repo-card_name">
@@ -138,7 +128,6 @@ import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { mapActions, mapState } from 'vuex';
-import gql from 'graphql-tag';
 
 export default {
   name: 'Repository',
@@ -148,70 +137,14 @@ export default {
     };
   },
 
-  apollo: {
-    userRepos: {
-      query: gql`
-        query getRepos($username: String!) {
-          userRepos: user(login: $username) {
-            repositories(
-              first: 20
-              orderBy: { field: UPDATED_AT, direction: DESC }
-            ) {
-              totalCount
-              nodes {
-                name
-                description
-                url
-                updatedAt
-                forkCount
-                stargazerCount
-                licenseInfo {
-                  name
-                }
-                primaryLanguage {
-                  name
-                  color
-                }
-                isPrivate
-                isFork
-                parent {
-                  name
-                  url
-                }
-                repositoryTopics(first: 30) {
-                  nodes {
-                    topic {
-                      name
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      `,
-
-      variables() {
-        return {
-          username: this.username,
-        };
-      },
-
-      error(error) {
-        this.error = JSON.stringify(error.message);
-      },
-    },
-  },
-
   data() {
     return {
-      userRepos: [],
       error: null,
     };
   },
 
   computed: {
-    ...mapState(['name', 'username', 'repoTotalCount']),
+    ...mapState(['userRepos', 'name', 'username', 'repoTotalCount']),
 
     repos() {
       return this.userRepos.repositories
@@ -229,17 +162,6 @@ export default {
   },
 
   methods: {
-    setTotalRepos() {
-      const x = this.userRepos.repositories;
-      if (x) {
-        return this.$store.commit('SET_TOTAL_REPO', x.totalCount);
-      }
-
-      return '';
-    },
-
-    ...mapActions(['updateErrorMessage']),
-
     gotoPrevious() {
       if (!this.isFirstPage) {
         // const newPage = this.page - 1;
@@ -262,25 +184,12 @@ export default {
       return this.username;
     },
 
-    ...mapActions(['updateReposLoading']),
+    ...mapActions(['updateErrorMessage']),
   },
 
-  created() {
+  async created() {
     dayjs.extend(relativeTime);
     dayjs.extend(localizedFormat);
-    this.setTotalRepos();
-    this.updateReposLoading(this.$apollo.queries.userRepos.loading);
-  },
-
-  async beforeUpdate() {
-    this.setTotalRepos();
-
-    const currentUser = this.$router.currentRoute.path.slice(1);
-    if (currentUser !== this.username) {
-      this.$store.commit('SET_USERNAME', currentUser);
-      this.updateReposLoading(this.$apollo.queries.userRepos.loading);
-      await this.$apollo.queries.userRepos.refresh();
-    }
   },
 
   filters: {
@@ -293,10 +202,11 @@ export default {
         return `on ${dayjs(date).format('D MMM YYYY')}`;
       }
 
-      if (
-        dayjs(date).fromNow().includes('month')
-        && parseInt(String(date).slice(0, 4), 10) === new Date().getFullYear()
-      ) {
+      const fromNowMonth = dayjs(date).fromNow().includes('month');
+      const currentYear = new Date().getFullYear();
+      const isThisYear = parseInt(String(date).slice(0, 4), 10) === currentYear;
+
+      if (fromNowMonth && isThisYear) {
         return `on ${dayjs(date).format('D MMM')}`;
       }
 

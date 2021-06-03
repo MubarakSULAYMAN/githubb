@@ -1,10 +1,8 @@
 <template>
   <div>
-    <!-- FIXME: Fix issues with loading state not updating appropriately -->
-    <!-- <animated-octocat v-if="isDataLoading === true" /> -->
+    <animated-octocat v-if="isDataLoading" />
 
-    <!-- <div class="users grid" v-else> -->
-    <div class="users grid">
+    <div class="users grid" v-if="isDataLoading === false">
       <user-menu-nav class="top-nav sticky" @updateRoute="checkRoute" />
 
       <side-nav class="side-nav" />
@@ -14,48 +12,70 @@
       <users-footer class="footer flex-row" />
     </div>
 
-<!-- TODO: Add error and messages -->
-    <!-- <error-notification v-if="errorState === true"> -->
-    <!-- <error-notification>
+    <!-- TODO: Add error and messages -->
+    <!-- <error-notification v-if="errorState"> -->
+    <error-notification>
       {{ errorMessage }}
-    </error-notification> -->
+    </error-notification>
     <!-- <div v-if="error">{{ error }}</div> -->
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
-// import ErrorNotification from '@/components/ErrorNotification.vue';
+import ErrorNotification from '@/components/ErrorNotification.vue';
 import Repositories from '@/components/Repositories.vue';
 import SideNav from '@/components/SideNav.vue';
 import UserMenuNav from '@/components/UserMenuNav.vue';
 import UsersFooter from '@/views/layouts/UsersFooter.vue';
-// import AnimatedOctocat from '../../components/AnimatedOctocat.vue';
+import AnimatedOctocat from '../../components/AnimatedOctocat.vue';
 
 export default {
   components: {
     UserMenuNav,
     SideNav,
     Repositories,
-    // ErrorNotification,
+    ErrorNotification,
     UsersFooter,
-    // AnimatedOctocat,
+    AnimatedOctocat,
   },
 
   computed: {
     isDataLoading() {
-      // return this.$apollo.queries.{name}.loading;
-      return this.userLoading && this.userReposLoading;
+      return this.userLoading || this.userReposLoading;
     },
 
     ...mapState([
       'userLoading',
       'userReposLoading',
+      'user',
       'username',
       'errorState',
       'errorMessage',
     ]),
+  },
+
+  async created() {
+    const currentUser = this.$router.currentRoute.path.slice(1);
+    const username = this.username.toLowerCase();
+    const pathQuery = '?tab=repositories';
+    const routeName = this.$route.path.slice(1);
+    const fullPath = this.$route.fullPath.toLowerCase();
+    const pathMatch = fullPath === `/${username}${pathQuery}`;
+
+    if (currentUser !== username) {
+      this.$store.commit('SET_USERNAME', currentUser);
+      await (this.fetchUserDetails(), this.fetchRepos());
+
+      if (!pathMatch) {
+        this.$router.push(routeName + pathQuery).catch((err) => {
+          if (err.name !== 'NavigationDuplicated') {
+            console.log(err);
+          }
+        });
+      }
+    }
   },
 
   methods: {
@@ -65,9 +85,13 @@ export default {
 
     checkRoute(val) {
       if (val !== 1) {
-        this.$router.push(`/${this.username}?tab=repositories`);
+        if (this.user) {
+          this.$router.push(`/${this.user.login}?tab=repositories`);
+        } else this.$router.push(`/${this.username}?tab=repositories`);
       }
     },
+
+    ...mapActions(['fetchUserDetails', 'fetchRepos']),
   },
 };
 </script>

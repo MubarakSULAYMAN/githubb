@@ -40,6 +40,7 @@
       </span>
 
       <span class="large-screen" v-if="avatarUrl && $route.path !== ''">
+      <!-- <span class="large-screen"> -->
         <router-link
           to="/"
           class="w-fit bg-black"
@@ -54,6 +55,7 @@
       <span v-else></span>
 
       <div class="nav_extras flex-row ml-auto" v-if="avatarUrl">
+      <!-- <div class="nav_extras flex-row ml-auto"> -->
         <i aria-hidden="true" class="far fa-bell" title="notification"></i>
 
         <i aria-hidden="true" class="far fa-plus" title="add new"></i>

@@ -11,7 +11,7 @@
         @keydown.enter="getUser"
       />
       <button class="ml-auto" type="submit">YES</button>
-      <!-- <p v-if="processing === true">Continuing as "{{ username }}"...</p> -->
+      <p v-if="processing">Continuing as "{{ username }}"...</p>
       <!-- <p v-if="[404].includes(request_status)">
         "{{ username }}" maybe INVALID!!!
       </p> -->
@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   data() {
     return {
@@ -30,9 +32,14 @@ export default {
   methods: {
     getUser() {
       if (this.username !== '') {
+        this.fetchUserDetails();
+        this.fetchRepos();
+        this.processing = true;
         this.$router.push(`/${this.username}?tab=repositories`);
       }
     },
+
+    ...mapActions(['fetchUserDetails', 'fetchRepos']),
   },
 
   computed: {

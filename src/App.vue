@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <!-- <p>{{ userError }}</p> -->
     <the-nav />
     <router-view />
   </div>
@@ -7,7 +8,7 @@
 
 <script>
 import TheNav from '@/views/layouts/TheNav.vue';
-// import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 export default {
   name: 'App',
@@ -20,25 +21,17 @@ export default {
   },
 
   // TODO: Create a redirect for route that are not matching as expected
-  // computed: {
-  //   ...mapState(['username']),
-  // },
-
-  // created() {
-  //   if (this.$router.currentRoute.path.slice(1)) {
-
-  //   }
-  //   return {}
-  // },
+  computed: {
+    ...mapState(['username', 'userError']),
+  },
 
   mounted() {
-    // // show key pressed by user
-    // window.addEventListener('keypress', e => {
-    //     console.log(String.fromCharCode(e.keyCode))
-    // })
-
     if (localStorage.username) {
       this.$store.commit('SET_USERNAME', localStorage.username);
+    }
+
+    if (this.userError) {
+      this.updateErrorMessage(this.userError);
     }
   },
 
@@ -46,10 +39,10 @@ export default {
     username(newName) {
       localStorage.username = newName;
     },
+  },
 
-    page(newPage) {
-      localStorage.page = newPage;
-    },
+  methods: {
+    ...mapActions(['updateErrorMessage']),
   },
 };
 </script>
@@ -59,7 +52,5 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* text-align: center;
-  color: #2c3e50; */
 }
 </style>

@@ -119,54 +119,23 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import gql from 'graphql-tag';
 
 export default {
-  apollo: {
-    user: {
-      query: gql`
-        query getUser($username: String!) {
-          user(login: $username) {
-            login
-            name
-            company
-            avatarUrl
-            bio
-            email
-            followers {
-              totalCount
-            }
-            following {
-              totalCount
-            }
-            starredRepositories {
-              totalCount
-            }
-            location
-            twitterUsername
-            websiteUrl
-          }
-        }
-      `,
-
-      variables() {
-        return {
-          username: this.username,
-        };
-      },
-
-      error(error) {
-        this.error = JSON.stringify(error.message);
-      },
-    },
-  },
-
   data() {
     return {
-      user: [],
       showItem: false,
       error: null,
     };
+  },
+
+  computed: {
+    ...mapState(['user']),
+  },
+
+  async created() {
+    this.$store.commit('SET_NAME', this.user.name);
+    this.showItem = true;
+    window.addEventListener('scroll', this.onScroll);
   },
 
   methods: {
@@ -177,38 +146,18 @@ export default {
       this.$store.commit('SET_AVATAR_STATUS', !this.showItem);
     },
 
-    setAvatarUrl() {
-      const x = this.user;
-      if (x) {
-        return this.$store.commit('SET_AVATAR_URL', x.avatarUrl);
-      }
+    // setUserNav() {
+    //   const userDetails = this.user;
 
-      return '';
-    },
+    //   if (userDetails) {
+    //     this.$store.commit('SET_AVATAR_URL', userDetails.avatarUrl);
+    //     this.$store.commit('SET_USERNAME', userDetails.login);
+    //   }
 
-    ...mapActions(['updateUserLoading']),
-  },
+    //   return '';
+    // },
 
-  computed: {
-    ...mapState(['username']),
-  },
-
-  created() {
-    this.updateUserLoading(this.$apollo.queries.user.loading);
-    this.$store.commit('SET_NAME', this.user.name);
-    this.showItem = true;
-    window.addEventListener('scroll', this.onScroll);
-  },
-
-  async beforeUpdate() {
-    this.setAvatarUrl();
-
-    const currentUser = this.$router.currentRoute.path.slice(1);
-    if (currentUser !== this.username) {
-      this.$store.commit('SET_USERNAME', currentUser);
-      this.updateUserLoading(this.$apollo.queries.user.loading);
-      await this.$apollo.queries.user.refresh();
-    }
+    ...mapActions(['userDetails']),
   },
 
   destroyed() {
