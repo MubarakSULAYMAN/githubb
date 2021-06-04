@@ -39,8 +39,7 @@
         </span>
       </span>
 
-      <span class="large-screen" v-if="avatarUrl && $route.path !== ''">
-      <!-- <span class="large-screen"> -->
+      <span class="route-group large-screen" v-if="avatarUrl && $route.path !== ''">
         <router-link
           to="/"
           class="w-fit bg-black"
@@ -428,6 +427,10 @@ input[type='text']:focus {
   border-radius: 0.25rem;
   border-top: none;
   color: var(--github-white);
+}
+
+.route-group {
+  display: flex;
 }
 
 .nav a {

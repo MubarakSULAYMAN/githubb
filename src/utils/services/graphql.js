@@ -4,7 +4,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 
 const getHeaders = () => {
   const headers = {};
-  const myToken = process.env.VUE_APP_KEY;
+  const myToken = process.env.VUE_APP_API_KEY;
 
   if (myToken) {
     headers.authorization = `Bearer ${myToken}`;
@@ -13,7 +13,7 @@ const getHeaders = () => {
   return headers;
 };
 
-const uri = process.env.VUE_APP_API_URL;
+const uri = process.env.VUE_APP_API_URL || 'https://api.github.com/graphql';
 const link = new HttpLink({
   uri,
   fetch,
