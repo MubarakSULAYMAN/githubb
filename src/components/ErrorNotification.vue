@@ -1,7 +1,6 @@
 <template>
   <transition name="fly">
     <div :class="['warning', isError ? 'error-notif' : '']" v-if="isError">
-      <!-- <div class="warning"> -->
       <p>
         <slot></slot>
       </p>
@@ -11,18 +10,21 @@
 
 <script>
 import { mapState } from 'vuex';
-// import { mapState } from 'vuex';
 
 export default {
-  created() {
-    return [
-      this.$store.dispatch('showWarning'),
-      // console.log('Error notification is created'),
-    ];
+  watch: {
+    isError() {
+      setTimeout(() => {
+        this.$router.push('/').catch((err) => {
+          if (err.name !== 'NavigationDuplicated') {
+            console.log(err);
+          }
+        });
+      }, 3500);
+    },
   },
 
   computed: {
-    // ...mapState(['isError']),
     ...mapState(['isError']),
   },
 };
@@ -43,7 +45,6 @@ export default {
   box-shadow: 4px 4px red;
   transition: all 0.5s ease-in-out;
   z-index: 9999;
-  /* animation: shake 0.3s ease-in-out 0.3s infinite alternate; */
 }
 
 @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {

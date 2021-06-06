@@ -11,10 +11,6 @@
         @keydown.enter="getUser"
       />
       <button class="ml-auto" type="submit">YES</button>
-      <p v-if="processing">Continuing as "{{ username }}"...</p>
-      <!-- <p v-if="[404].includes(request_status)">
-        "{{ username }}" maybe INVALID!!!
-      </p> -->
     </form>
   </div>
 </template>
@@ -23,18 +19,11 @@
 import { mapActions } from 'vuex';
 
 export default {
-  data() {
-    return {
-      processing: false,
-    };
-  },
-
   methods: {
     getUser() {
       if (this.username !== '') {
         this.fetchUserDetails();
         this.fetchRepos();
-        this.processing = true;
         this.$router.push(`/${this.username}?tab=repositories`);
       }
     },

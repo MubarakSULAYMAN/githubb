@@ -7,17 +7,15 @@
 
       <side-nav class="side-nav" />
 
-      <repositories class="main-content" />
+      <component :is="currentTab"></component>
 
       <users-footer class="footer flex-row" />
     </div>
 
     <!-- TODO: Add error and messages -->
-    <!-- <error-notification v-if="errorState"> -->
     <error-notification>
       {{ errorMessage }}
     </error-notification>
-    <!-- <div v-if="error">{{ error }}</div> -->
   </div>
 </template>
 
@@ -25,7 +23,7 @@
 import { mapActions, mapState } from 'vuex';
 
 import ErrorNotification from '@/components/ErrorNotification.vue';
-import Repositories from '@/components/Repositories.vue';
+// import Repositories from '@/components/Repositories.vue';
 import SideNav from '@/components/SideNav.vue';
 import UserMenuNav from '@/components/UserMenuNav.vue';
 import UsersFooter from '@/views/layouts/UsersFooter.vue';
@@ -35,23 +33,33 @@ export default {
   components: {
     UserMenuNav,
     SideNav,
-    Repositories,
+    // Repositories,
     ErrorNotification,
     UsersFooter,
     AnimatedOctocat,
   },
 
   computed: {
+    currentTab() {
+      // const selectedTab = this.selectedTab;
+      // if (selectedTab) {
+      //   return () => import(`@/components/${selectedTab}.vue`);
+      // }
+
+      return () => import('@/components/Repositories.vue');
+    },
+
     isDataLoading() {
       return this.userLoading || this.userReposLoading;
     },
 
     ...mapState([
+      'selectedTab',
       'userLoading',
       'userReposLoading',
       'user',
       'username',
-      'errorState',
+      'isError',
       'errorMessage',
     ]),
   },
@@ -83,15 +91,20 @@ export default {
       this.$router.push(route);
     },
 
-    checkRoute(val) {
-      if (val !== 1) {
-        if (this.user) {
-          this.$router.push(`/${this.user.login}?tab=repositories`);
-        } else this.$router.push(`/${this.username}?tab=repositories`);
+    checkRoute(name) {
+      if (name !== 'Repositories') {
+        let currentUser = this.user.login;
+
+        if (!currentUser) {
+          currentUser = this.username;
+        }
+
+        this.updateErrorMessage('Feature presently unvailable');
+        this.$router.push(`/${currentUser}?tab=repositories`);
       }
     },
 
-    ...mapActions(['fetchUserDetails', 'fetchRepos']),
+    ...mapActions(['updateErrorMessage', 'fetchUserDetails', 'fetchRepos']),
   },
 };
 </script>

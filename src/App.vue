@@ -30,9 +30,13 @@ export default {
       this.$store.commit('SET_USERNAME', localStorage.username);
     }
 
-    if (this.userError) {
-      this.updateErrorMessage(this.userError);
-    }
+    // if (this.userError) {
+    //   // this.updateErrorMessage(this.userError);
+
+    //   setTimeout(() => {
+    //     this.$router.push('/');
+    //   }, 500);
+    // }
   },
 
   watch: {

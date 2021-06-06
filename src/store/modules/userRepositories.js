@@ -53,10 +53,6 @@ const actions = {
         variables: {
           username: rootState.username,
         },
-
-        // error(error) {
-        //   this.error = JSON.stringify(error.message);
-        // },
       });
 
       const repos = response.data.userRepos;
@@ -64,10 +60,8 @@ const actions = {
       commit('SET_REPOS', repos);
       commit('SET_TOTAL_REPO', repos.repositories.totalCount);
       commit('SET_REPOS_LOADING', response.loading);
-    } catch (e) {
-      // console.log(e);
-      commit('SET_USER_ERROR', e);
-      dispatch('updateErrorMessage', e);
+    } catch (err) {
+      dispatch('updateErrorMessage', err);
     }
   },
 };

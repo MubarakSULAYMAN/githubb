@@ -110,7 +110,7 @@ export default {
     transform: translate(-50%, -70%); */
     opacity: 1;
     display: flex;
-    height: 100vh;
+    height: calc(100vh - 4.5rem);
     background-color: var(--github-black);
     z-index: 1111;
 }
@@ -118,4 +118,12 @@ export default {
 svg {
     margin: auto;
 }
+
+/* @media only screen and (max-width: 768px) {
+  .octocat-wrapper {
+    height: calc(100vh - 4.5rem);
+  }
+}
+
+@media only screen and (max-width: 425px) {} */
 </style>

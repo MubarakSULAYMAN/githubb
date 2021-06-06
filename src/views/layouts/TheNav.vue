@@ -15,7 +15,10 @@
         @click="home"
       ></i>
 
-      <span class="input-wrap large-screen w-fit bg-black">
+      <form
+        class="input-wrap large-screen w-fit bg-black"
+        @submit.prevent="getUser"
+      >
         <input
           type="text"
           name=""
@@ -26,6 +29,7 @@
           @focus="hideSlash = true"
           @blur="hideSlash = false"
           ref="searchInput"
+          @keydown.enter="getUser"
         />
         <!-- @keypress.s="setSearchFocus" -->
         <!-- .exact -->
@@ -37,9 +41,12 @@
         >
           /
         </span>
-      </span>
+      </form>
 
-      <span class="route-group large-screen" v-if="avatarUrl && $route.path !== ''">
+      <span
+        class="route-group large-screen"
+        v-if="avatarUrl && $route.path !== ''"
+      >
         <router-link
           to="/"
           class="w-fit bg-black"
@@ -51,10 +58,14 @@
         </router-link>
       </span>
 
-      <span v-else></span>
+      <span class="small-screen" v-if="!(avatarUrl && $route.path !== '')"></span>
+
+      <div class="info large-screen" v-if="!(avatarUrl && $route.path !== '')">
+        A query is required to proceed.
+      </div>
 
       <div class="nav_extras flex-row ml-auto" v-if="avatarUrl">
-      <!-- <div class="nav_extras flex-row ml-auto"> -->
+        <!-- <div class="nav_extras flex-row ml-auto"> -->
         <i aria-hidden="true" class="far fa-bell" title="notification"></i>
 
         <i aria-hidden="true" class="far fa-plus" title="add new"></i>
@@ -181,13 +192,13 @@
         </router-link>
       </div>
 
-      <div class="notify" v-else>A sign is required to proceed.</div>
+      <div class="info" v-else>A query is required to proceed.</div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 // import { mapState } from 'vuex';
 
 export default {
@@ -261,27 +272,48 @@ export default {
       this.$router.push(`/${this.username}?tab=repositories`);
     },
 
+    getUser() {
+      if (this.searchTerm !== '') {
+        this.fetchUserDetails();
+        this.fetchRepos();
+        this.processing = true;
+        this.$router
+          .push(`/${this.searchTerm}?tab=repositories`)
+          .catch((err) => {
+            if (err.name !== 'NavigationDuplicated') {
+              console.log(err);
+            }
+          });
+      }
+    },
+
     derivedData() {
+      let currentUser = this.user.login;
+
+      if (!currentUser) {
+        currentUser = this.username;
+      }
+
       return [
         {
           name: 'profile',
-          route: `/${this.username}`,
+          route: `/${currentUser}`,
         },
         {
           name: 'repository',
-          route: `/${this.username}?tab=repositories`,
+          route: `/${currentUser}?tab=repositories`,
         },
         {
           name: 'projects',
-          route: `/${this.username}?tab=projects`,
+          route: `/${currentUser}?tab=projects`,
         },
         {
           name: 'stars',
-          route: `/${this.username}?tab=stars`,
+          route: `/${currentUser}?tab=stars`,
         },
         {
           name: 'gists',
-          route: `/${this.username}?tab=packages`,
+          route: `/${currentUser}?tab=packages`,
         },
       ];
     },
@@ -301,6 +333,8 @@ export default {
     //         }
     //     // }
     // },
+
+    ...mapActions(['fetchUserDetails', 'fetchRepos']),
   },
 
   computed: {
@@ -308,7 +342,7 @@ export default {
       return this.derivedData();
     },
 
-    ...mapState(['username', 'avatarUrl']),
+    ...mapState(['user', 'username', 'avatarUrl']),
   },
 
   created() {
@@ -427,6 +461,13 @@ input[type='text']:focus {
   border-radius: 0.25rem;
   border-top: none;
   color: var(--github-white);
+}
+
+.info {
+  margin: auto;
+  color: var(--github-white);
+  font-weight: 900;
+  text-decoration: underline wavy red 1px;
 }
 
 .route-group {
@@ -583,6 +624,10 @@ input[type='text']:focus {
     display: block;
   }
 
+  .small-screen {
+    display: block;
+  }
+
   .large-screen {
     display: none;
   }
@@ -673,8 +718,8 @@ input[type='text']:focus {
     margin-right: 5px;
   }
 
-  .notify {
-    color: var(--github-white);
+  .info {
+    margin: 0;
   }
 }
 </style>

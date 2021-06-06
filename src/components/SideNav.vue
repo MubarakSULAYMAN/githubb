@@ -146,17 +146,6 @@ export default {
       this.$store.commit('SET_AVATAR_STATUS', !this.showItem);
     },
 
-    // setUserNav() {
-    //   const userDetails = this.user;
-
-    //   if (userDetails) {
-    //     this.$store.commit('SET_AVATAR_URL', userDetails.avatarUrl);
-    //     this.$store.commit('SET_USERNAME', userDetails.login);
-    //   }
-
-    //   return '';
-    // },
-
     ...mapActions(['userDetails']),
   },
 

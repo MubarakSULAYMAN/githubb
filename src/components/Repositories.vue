@@ -144,7 +144,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['userRepos', 'name', 'username', 'repoTotalCount']),
+    ...mapState(['userRepos', 'name', 'username', 'user', 'repoTotalCount']),
 
     repos() {
       return this.userRepos.repositories
@@ -161,18 +161,23 @@ export default {
     },
   },
 
+  async created() {
+    dayjs.extend(relativeTime);
+    dayjs.extend(localizedFormat);
+  },
+
   methods: {
     gotoPrevious() {
       if (!this.isFirstPage) {
         // const newPage = this.page - 1;
-        this.updateErrorMessage('Presently unvailable');
+        this.updateErrorMessage('Feature presently unvailable');
       }
     },
 
     gotoNext() {
       if (!this.isLastPage) {
         // const newPage = this.page + 1;
-        this.updateErrorMessage('Presently unvailable');
+        this.updateErrorMessage('Feature presently unvailable');
       }
     },
 
@@ -187,9 +192,20 @@ export default {
     ...mapActions(['updateErrorMessage']),
   },
 
-  async created() {
-    dayjs.extend(relativeTime);
-    dayjs.extend(localizedFormat);
+  watch: {
+    $route() {
+      let currentUser = this.user.login;
+
+      if (!currentUser) {
+        currentUser = this.username;
+      }
+
+      this.$router.push(`/${currentUser}?tab=repositories`).catch((err) => {
+        if (err.name !== 'NavigationDuplicated') {
+          console.log(err);
+        }
+      });
+    },
   },
 
   filters: {

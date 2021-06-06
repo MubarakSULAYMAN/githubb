@@ -12,10 +12,6 @@ import TheShortcuts from '../views/layouts/TheShortcuts.vue';
 
 export default {
   components: { TheShortcuts },
-
-  // created() {
-  //   return console.log('Invalid user is created');
-  // },
 };
 </script>
 
