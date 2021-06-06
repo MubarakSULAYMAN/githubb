@@ -98,25 +98,26 @@ export default new Vuex.Store({
     updateErrorMessage({ commit }, payload) {
       commit('SET_ERROR_STATE', true);
 
-      const noInternet = 'Network error: NetworkError';
-      const internalError = 'Received status code 401';
-      const invalidLogin = 'Could not resolve to a User';
-      let message = '';
+      // const noInternet = 'Network error: NetworkError';
+      // const internalError = 'Received status code 401';
+      // const invalidLogin = 'Could not resolve to a User';
+      // let message = '';
 
-      if (payload.includes(noInternet)) {
-        message = 'Kindly check and fix your internet to proceed.';
-      } else if (payload.includes(internalError)) {
-        message = 'Internal Error, it will be resolved soon.';
-      } else if (payload.includes(invalidLogin)) {
-        message = 'Try later, user does not exist.';
-      } else {
-        message = payload
-          .replace('Error: Network error: ', '')
-          .replace('Error: GraphQL error: ', '')
-          .replace('Error: UI error: ', '');
-      }
+      // if (payload.includes(noInternet)) {
+      //   message = 'Kindly check and fix your internet to proceed.';
+      // } else if (payload.includes(internalError)) {
+      //   message = 'Internal Error, it will be resolved soon.';
+      // } else if (payload.includes(invalidLogin)) {
+      //   message = 'Try later, user does not exist.';
+      // } else {
+      //   message = payload
+      //     .replace('Error: Network error: ', '')
+      //     .replace('Error: GraphQL error: ', '')
+      //     .replace('Error: UI error: ', '');
+      // }
 
-      commit('SET_ERROR_MESSAGE', message);
+      // commit('SET_ERROR_MESSAGE', message);
+      commit('SET_ERROR_MESSAGE', payload);
 
       setTimeout(() => {
         commit('SET_ERROR_STATE', false);

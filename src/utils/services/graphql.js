@@ -13,7 +13,7 @@ const getHeaders = () => {
   return headers;
 };
 
-const uri = process.env.VUE_APP_API_URL || 'https://api.github.com/graphql';
+const uri = process.env.VUE_APP_API_URL;
 const link = new HttpLink({
   uri,
   fetch,
