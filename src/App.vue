@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <!-- <p>{{ userError }}</p> -->
     <the-nav />
     <router-view />
   </div>
@@ -29,32 +28,24 @@ export default {
     if (localStorage.username) {
       this.$store.commit('SET_USERNAME', localStorage.username);
     }
-
-    // if (this.userError) {
-    //   // this.updateErrorMessage(this.userError);
-
-    //   setTimeout(() => {
-    //     this.$router.push('/');
-    //   }, 500);
-    // }
   },
 
   watch: {
     username(newName) {
       localStorage.username = newName;
     },
+
+    $route(newRoute, oldRoute) {
+      // console.log('New: ', newRoute.fullPath, 'Old: ', oldRoute.fullPath);
+      this.updateOldRoute(oldRoute.fullPath);
+    },
   },
 
   methods: {
-    ...mapActions(['updateErrorMessage']),
+    ...mapActions(['updateErrorMessage', 'updateOldRoute']),
   },
 };
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 </style>

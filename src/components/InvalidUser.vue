@@ -18,8 +18,7 @@ export default {
 <style scoped>
 div:not(.note) {
   position: relative;
-  /* width: 100vw; */
-  height: 100vh;
+  height: calc(100vh - 4.5rem);
   font-family: 'Helvetica Rounded Bold';
   font-style: normal;
   font-weight: bold;

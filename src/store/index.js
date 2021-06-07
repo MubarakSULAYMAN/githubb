@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+// import router from '../router';
 import userDetails from './modules/userDetails';
 import userRepositories from './modules/userRepositories';
 
@@ -9,6 +10,7 @@ export default new Vuex.Store({
   state: {
     isStarting: false,
     selectedTab: 'Repositories',
+    oldRoute: '',
     name: 'Mubarak SULAYMAN',
     username: 'MubarakSULAYMAN',
     avatarUrl: '',
@@ -34,6 +36,10 @@ export default new Vuex.Store({
 
     SET_USERNAME(state, newUsername) {
       state.username = newUsername;
+    },
+
+    SET_OLD_ROUTE(state, value) {
+      state.oldRoute = value;
     },
 
     SET_USER_DETAILS(state, data) {
@@ -91,6 +97,10 @@ export default new Vuex.Store({
       commit('SET_USERNAME', payload);
     },
 
+    updateOldRoute({ commit }, payload) {
+      commit('SET_OLD_ROUTE', payload);
+    },
+
     showWarning({ commit }, payload) {
       commit('SET_ERROR_STATE', payload);
     },
@@ -98,31 +108,48 @@ export default new Vuex.Store({
     updateErrorMessage({ commit }, payload) {
       commit('SET_ERROR_STATE', true);
 
-      // const noInternet = 'Network error: NetworkError';
-      // const internalError = 'Received status code 401';
-      // const invalidLogin = 'Could not resolve to a User';
-      // let message = '';
+      const payloadString = JSON.stringify(payload);
+      const noInternet = 'NetworkError';
+      const internalError = 'status code 401';
+      const invalidLogin = 'not resolve to a User';
+      let message = '';
 
-      // if (payload.includes(noInternet)) {
-      //   message = 'Kindly check and fix your internet to proceed.';
-      // } else if (payload.includes(internalError)) {
-      //   message = 'Internal Error, it will be resolved soon.';
-      // } else if (payload.includes(invalidLogin)) {
-      //   message = 'Try later, user does not exist.';
-      // } else {
-      //   message = payload
-      //     .replace('Error: Network error: ', '')
-      //     .replace('Error: GraphQL error: ', '')
-      //     .replace('Error: UI error: ', '');
-      // }
+      if (payloadString.includes(noInternet)) {
+        message = 'Kindly check and fix your internet to proceed.';
+      } else if (payloadString.includes(internalError)) {
+        message = 'Internal Error, it will be resolved soon.';
+      } else if (payloadString.includes(invalidLogin)) {
+        message = 'Try another username, user does not exist.';
+      } else {
+        message = payloadString
+          .replace(': NetworkError', '')
+          .replace(': graphQLErrors', '')
+          .replace(': UI error', '');
+      }
 
-      // commit('SET_ERROR_MESSAGE', message);
-      commit('SET_ERROR_MESSAGE', payload);
+      commit('SET_ERROR_MESSAGE', message);
+
+      // commit('SET_ERROR_MESSAGE', payload);
+      // console.log('String: ', JSON.stringify(payload));
 
       setTimeout(() => {
         commit('SET_ERROR_STATE', false);
       }, 3000);
+
+      // if (state.oldRoute === '/') {
+      //    dispatch('pushRoute', '/', { root: true });
+      // }
     },
+
+    // pushRoute(val) {
+    // setTimeout(() => {
+    //   router.push(`'${route}'`).catch((err) => {
+    //     if (err.name !== 'NavigationDuplicated') {
+    //       console.log(err);
+    //     }
+    //   });
+    // }, 3500);
+    // },
   },
 
   modules: {

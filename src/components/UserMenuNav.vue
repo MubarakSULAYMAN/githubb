@@ -40,7 +40,6 @@ export default {
   methods: {
     changeRoute(val) {
       this.$emit('updateRoute', val);
-      console.log(val);
     },
 
     menu() {

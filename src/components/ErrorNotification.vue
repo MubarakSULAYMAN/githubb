@@ -14,18 +14,23 @@ import { mapState } from 'vuex';
 export default {
   watch: {
     isError() {
-      setTimeout(() => {
-        this.$router.push('/').catch((err) => {
-          if (err.name !== 'NavigationDuplicated') {
-            console.log(err);
-          }
-        });
-      }, 3500);
+      if (this.oldRoute === '/') {
+        setTimeout(() => {
+          this.$router.push('/').catch((err) => {
+            if (err.name !== 'NavigationDuplicated') {
+              console.log(err);
+            }
+          });
+        }, 3500);
+        // console.log(this.isError);
+      } else if (this.errorMessage.includes('not exist')) {
+        this.$router.push('/user/not-found');
+      }
     },
   },
 
   computed: {
-    ...mapState(['isError']),
+    ...mapState(['isError', 'oldRoute', 'username', 'errorMessage']),
   },
 };
 </script>

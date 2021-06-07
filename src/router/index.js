@@ -27,6 +27,13 @@ const routes = [
   // },
 
   {
+    path: '/user/not-found/',
+    name: 'UserNotFound',
+    // component: '@/components/InvalidUser.vue',
+    component: () => import(/* webpackChunkName: "not-found" */ '../components/InvalidUser.vue'),
+  },
+
+  {
     path: '/:username',
     name: 'Users',
     component: Users,

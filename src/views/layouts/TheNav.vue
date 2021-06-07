@@ -274,6 +274,7 @@ export default {
 
     getUser() {
       if (this.searchTerm !== '') {
+        this.$store.commit('SET_USERNAME', this.searchTerm);
         this.fetchUserDetails();
         this.fetchRepos();
         this.processing = true;
@@ -553,7 +554,7 @@ input[type='text']:focus {
   background-color: var(--github-blue);
 }
 
-.dropdown:hover .dropdown-content,
+/* .dropdown:hover .dropdown-content, */
 .dropdown:focus .dropdown-content {
   display: block;
 }

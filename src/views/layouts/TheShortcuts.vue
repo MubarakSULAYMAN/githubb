@@ -1,5 +1,5 @@
 <template>
-  <p><span>Go Back</span> or <span>Return Home</span></p>
+  <p><span @click="goBack">Go Back</span> or <span @click="returnHome">Return Home</span></p>
 </template>
 
 <script>

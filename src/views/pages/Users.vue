@@ -74,15 +74,18 @@ export default {
 
     if (currentUser !== username) {
       this.$store.commit('SET_USERNAME', currentUser);
-      await (this.fetchUserDetails(), this.fetchRepos());
+    } else {
+      this.$store.commit('SET_USERNAME', username);
+    }
 
-      if (!pathMatch) {
-        this.$router.push(routeName + pathQuery).catch((err) => {
-          if (err.name !== 'NavigationDuplicated') {
-            console.log(err);
-          }
-        });
-      }
+    await (this.fetchUserDetails(), this.fetchRepos());
+
+    if (!pathMatch) {
+      this.$router.push(routeName + pathQuery).catch((err) => {
+        if (err.name !== 'NavigationDuplicated') {
+          console.log(err);
+        }
+      });
     }
   },
 
@@ -100,7 +103,11 @@ export default {
         }
 
         this.updateErrorMessage('Feature presently unvailable');
-        this.$router.push(`/${currentUser}?tab=repositories`);
+        this.$router.push(`/${currentUser}?tab=repositories`).catch((err) => {
+          if (err.name !== 'NavigationDuplicated') {
+            console.log(err);
+          }
+        });
       }
     },
 

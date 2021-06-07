@@ -21,7 +21,6 @@ export default {
 div:not(.note) {
     position: relative;
     width: 100%;
-    height: fit-content;
     font-family: 'Helvetica Rounded Bold';
     font-style: normal;
     font-weight: bold;
@@ -71,10 +70,6 @@ img {
     p:nth-child(2) {
         font-size: var(--font-normal);
     }
-
-    /* img {
-        margin-top: 1rem;
-    } */
 
     .shortcuts {
         position: absolute;

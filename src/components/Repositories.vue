@@ -161,7 +161,7 @@ export default {
     },
   },
 
-  async created() {
+  created() {
     dayjs.extend(relativeTime);
     dayjs.extend(localizedFormat);
   },
